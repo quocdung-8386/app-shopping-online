@@ -1,0 +1,43 @@
+<resources>
+
+    <!-- Theme có ActionBar mặc định -->
+    <style name="Theme.AppOnline" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">#FF4081</item>
+        <item name="colorPrimaryVariant">#FF6961</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorSecondary">#333333</item>
+        <item name="colorSecondaryVariant">#000000</item>
+        <item name="colorOnSecondary">@android:color/white</item>
+
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+    </style>
+
+    <!-- Theme KHÔNG có ActionBar (dùng khi tự tạo Toolbar) -->
+    <style name="Theme.AppOnline.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#FF4081</item>
+        <item name="colorPrimaryVariant">#FF6961</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorSecondary">#333333</item>
+        <item name="colorSecondaryVariant">#000000</item>
+        <item name="colorOnSecondary">@android:color/white</item>
+
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <!-- Style text Hóa Đơn -->
+    <style name="InvoiceDetailText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#333333</item>
+        <item name="android:layout_marginBottom">4dp</item>
+    </style>
+
+    <style name="InvoiceDetailTextBold" parent="InvoiceDetailText">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#FF4081</item>
+        <item name="android:layout_marginTop">8dp</item>
+    </style>
+
+</resources>

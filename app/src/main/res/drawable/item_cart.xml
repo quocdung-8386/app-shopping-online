@@ -1,0 +1,100 @@
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="2dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+
+        <ImageView
+            android:id="@+id/iv_cart_product"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/product_placeholder"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_cart_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="Áo Thun Cao Cấp Oversize"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:maxLines="2"
+            app:layout_constraintStart_toEndOf="@id/iv_cart_product"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_remove" />
+
+        <TextView
+            android:id="@+id/tv_cart_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="199.000 VNĐ"
+            android:textSize="14sp"
+            android:textColor="#FF4081"
+            app:layout_constraintStart_toStartOf="@id/tv_cart_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_cart_name" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            app:layout_constraintStart_toStartOf="@id/tv_cart_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_cart_price">
+
+            <ImageButton
+                android:id="@+id/btn_minus"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_minus"
+                android:background="@android:color/transparent"
+                android:tint="#888888"
+                android:contentDescription="Giảm số lượng" />
+
+            <TextView
+                android:id="@+id/tv_cart_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="1"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <ImageButton
+                android:id="@+id/btn_plus"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_add"
+                android:background="@android:color/transparent"
+                android:tint="#888888"
+                android:contentDescription="Tăng số lượng" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btn_remove"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_close"
+            android:background="@android:color/transparent"
+            android:tint="#FF4081"
+            android:contentDescription="Xóa khỏi giỏ hàng"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/ivOrderProductThumbnail"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="12dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/product_placeholder"
+            android:contentDescription="Hình ảnh sản phẩm đơn hàng" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/tvOrderHistoryId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mã Đơn: #ORD123456"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Mã: #ORD123456"/>
+
+            <TextView
+                android:id="@+id/tvOrderHistoryStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pending"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#FF4081"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Đã hoàn tất"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#EEEEEE"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/tvOrderHistoryDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ngày đặt: 26/09/2025 15:30"
+            android:textSize="14sp"
+            android:textColor="#666666"
+            tools:text="Ngày đặt: 26/09/2025 15:30"/>
+
+        <TextView
+            android:id="@+id/tvOrderHistoryItemsCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="3 Sản phẩm"
+            android:textSize="14sp"
+            android:textColor="#666666"
+            tools:text="3 Sản phẩm" />
+
+
+        <TextView
+            android:id="@+id/tvOrderHistoryTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Tổng: 350.000 VNĐ"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#FF4081"
+            tools:text="Tổng: 350.000 VNĐ"/>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:state_selected="true"
+        android:drawable="@drawable/size_button_selected">
+        <color
+            android:color="@android:color/white" />
+    </item>
+
+    <item android:drawable="@drawable/size_button_default">
+        <color
+            android:color="@android:color/black" />
+    </item>
+</selector>
