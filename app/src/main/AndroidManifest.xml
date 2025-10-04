@@ -62,10 +62,14 @@
             android:name=".CheckoutActivity"
             android:label="Thanh Toán"
             android:theme="@style/Theme.AppOnline.NoActionBar" />
-        <activity android:name=".SelectAddressActivity"
+
+        <activity
+            android:name=".SelectAddressActivity"
             android:label="Chọn Địa Chỉ Nhận Hàng"
             android:theme="@style/Theme.AppOnline.NoActionBar" />
-<activity android:name=".NewAddressActivity"
+
+        <activity
+            android:name=".NewAddressActivity"
             android:label="Thêm Địa Chỉ Mới"
             android:theme="@style/Theme.AppOnline.NoActionBar" />
         <activity
