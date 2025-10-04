@@ -8,11 +8,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * OrderManager quản lý các thao tác liên quan đến Order (Lịch sử đơn hàng và tạo đơn hàng).
- * Sử dụng mẫu Singleton.
- */
 public class OrderManager {
 
     private static final String TAG = "OrderManager";
@@ -20,15 +15,11 @@ public class OrderManager {
 
     private static OrderManager instance;
     private FirebaseFirestore db;
-
-    // =========================================================================
-    // INTERFACE CALLBACK
-    // =========================================================================
     public interface OrderLoadCallback {
         void onOrdersLoaded(List<Order> orders);
         void onFailure(String errorMessage);
     }
-    // =========================================================================
+
 
     private OrderManager() {
         db = FirebaseHelper.getFirestoreInstance();
@@ -40,14 +31,6 @@ public class OrderManager {
         }
         return instance;
     }
-
-    // =========================================================================
-    // TẢI LỊCH SỬ ĐƠN HÀNG
-    // =========================================================================
-
-    /**
-     * Tải tất cả các đơn hàng của người dùng hiện tại từ Firestore.
-     */
     public void fetchUserOrders(OrderLoadCallback callback) {
         String userId = FirebaseHelper.getCurrentUserId();
 
@@ -70,12 +53,9 @@ public class OrderManager {
                             Order order = document.toObject(Order.class);
 
                             if (order != null) {
-                                // 🚨 SỬA LỖI: Gán Document ID cho trường orderId (nếu bạn dùng nó như ID chính thức)
-                                // Nếu trường orderId đã có trong Firestore, dòng này chỉ xác nhận ID.
-                                // Nếu bạn đang dùng Document ID làm ID chính:
+
                                 order.setOrderId(document.getId());
 
-                                // 🚨 SỬA LỖI: Đảm bảo trường items không NULL (phòng ngừa lỗi trong Firestore)
                                 if (order.getItems() == null) {
                                     order.setItems(new ArrayList<>());
                                 }
@@ -87,7 +67,6 @@ public class OrderManager {
                             }
                         } catch (Exception e) {
                             Log.e(TAG, "Error processing order document " + document.getId() + ": " + e.getMessage());
-                            // Bỏ qua document bị lỗi và tiếp tục với các document khác
                         }
                     }
 
@@ -100,17 +79,7 @@ public class OrderManager {
                 });
     }
 
-    // =========================================================================
-    // TẠO ĐƠN HÀNG (Mẫu)
-    // =========================================================================
-
-    /**
-     * Hàm mẫu để tạo và lưu đơn hàng mới vào Firestore.
-     */
     public void placeOrder(Order newOrder, OrderPlaceCallback callback) {
-        // Tạo một document reference mới để Firestore tự động tạo ID
-        // Nếu newOrder đã có orderId, dùng set() thay vì add()
-
         db.collection(COLLECTION_ORDERS).add(newOrder)
                 .addOnSuccessListener(documentReference -> {
                     Log.d(TAG, "Order placed successfully with ID: " + documentReference.getId());

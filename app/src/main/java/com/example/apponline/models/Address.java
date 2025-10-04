@@ -6,23 +6,19 @@ import android.os.Parcelable;
 import com.google.firebase.firestore.Exclude;
 
 public class Address implements Parcelable {
-    // 🚨 TRƯỜNG MỚI: Dùng để lưu trữ Document ID từ Firestore
     private String addressId;
 
     private String name;
     private String phoneNumber;
-    private String detailAddress; // Tên đường, số nhà, tòa nhà
-    private String cityState;     // Tỉnh/Thành phố, Quận/Huyện, Phường/Xã
+    private String detailAddress;
+    private String cityState;
     private boolean isDefault;
     private boolean isShippingAddress;
     private String addressType;
 
-    // 1. CONSTRUCTOR KHÔNG THAM SỐ (BẮT BUỘC CHO FIRESTORE)
     public Address() {
-        // Constructor rỗng cần thiết cho việc deserialization của Firebase Firestore
     }
 
-    // 2. CONSTRUCTOR ĐẦY ĐỦ (Dùng để tạo đối tượng mới)
     public Address(String name, String phoneNumber, String detailAddress, String cityState, boolean isDefault, boolean isShippingAddress, String addressType) {
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -33,13 +29,7 @@ public class Address implements Parcelable {
         this.addressType = addressType;
     }
 
-    // =========================================================================
-    // PARCELABLE IMPLEMENTATION
-    // =========================================================================
-
-    // 3. CONSTRUCTOR ĐỌC TỪ PARCEL
     protected Address(Parcel in) {
-        // 🚨 ĐỌC addressId ĐẦU TIÊN
         addressId = in.readString();
 
         name = in.readString();
@@ -51,7 +41,6 @@ public class Address implements Parcelable {
         addressType = in.readString();
     }
 
-    // 4. CREATOR (Bắt buộc)
     public static final Creator<Address> CREATOR = new Creator<Address>() {
         @Override
         public Address createFromParcel(Parcel in) {
@@ -63,11 +52,8 @@ public class Address implements Parcelable {
             return new Address[size];
         }
     };
-
-    // 5. GHI DỮ LIỆU VÀO PARCEL
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        // 🚨 GHI addressId ĐẦU TIÊN
         dest.writeString(addressId);
 
         dest.writeString(name);
@@ -79,17 +65,11 @@ public class Address implements Parcelable {
         dest.writeString(addressType);
     }
 
-    // 6. DESCRIBE CONTENTS (Thường trả về 0)
     @Override
     public int describeContents() {
         return 0;
     }
 
-    // =========================================================================
-    // GETTERS VÀ SETTERS CHO addressId (Cần thiết cho logic xóa)
-    // =========================================================================
-
-    // 🚨 Thêm @Exclude vào getter để Firestore bỏ qua trường này khi ghi
     @Exclude
     public String getAddressId() {
         return addressId;
@@ -99,12 +79,6 @@ public class Address implements Parcelable {
         this.addressId = addressId;
     }
 
-
-    // =========================================================================
-    // GETTERS VÀ SETTERS CŨ
-    // =========================================================================
-
-    // --- GETTERS ---
     public String getDetailAddress() { return detailAddress; }
     public boolean isDefault() { return isDefault; }
     public String getName() { return name; }
@@ -113,8 +87,6 @@ public class Address implements Parcelable {
     public boolean isShippingAddress() { return isShippingAddress; }
     public String getAddressType() { return addressType; }
 
-
-    // --- SETTERS ---
     public void setName(String name) { this.name = name; }
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
     public void setDetailAddress(String detailAddress) { this.detailAddress = detailAddress; }

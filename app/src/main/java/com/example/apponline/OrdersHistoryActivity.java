@@ -38,23 +38,19 @@ public class OrdersHistoryActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders_history);
 
-        // Khởi tạo Firebase
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        // Ánh xạ Views
         rvOrders = findViewById(R.id.rvOrdersHistory);
         tvNoOrders = findViewById(R.id.tvNoOrders);
-        btnBack = findViewById(R.id.btnBack); // 2. ÁNH XẠ btnBack
+        btnBack = findViewById(R.id.btnBack);
 
-        // Thiết lập RecyclerView
         orderList = new ArrayList<>();
         adapter = new OrderHistoryAdapter(this, orderList, this);
 
         rvOrders.setLayoutManager(new LinearLayoutManager(this));
         rvOrders.setAdapter(adapter);
 
-        // 3. XỬ LÝ SỰ KIỆN NÚT BACK
         if (btnBack != null) {
             btnBack.setOnClickListener(v -> {
                 onBackPressed();
@@ -88,7 +84,6 @@ public class OrdersHistoryActivity extends AppCompatActivity
                             try {
                                 Order order = document.toObject(Order.class);
 
-                                // Gán Document ID
                                 order.setOrderId(document.getId());
 
                                 orderList.add(order);

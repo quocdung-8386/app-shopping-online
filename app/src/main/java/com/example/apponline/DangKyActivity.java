@@ -15,14 +15,12 @@ public class DangKyActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText etEmail, etPassword, etConfirmPassword;
     private Button btnSignUp;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dang_ky);
 
         mAuth = FirebaseHelper.getFirebaseAuth();
-
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
@@ -56,9 +54,7 @@ public class DangKyActivity extends AppCompatActivity {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        // Tùy chọn: Lưu thông tin người dùng vào Firestore
                         Toast.makeText(DangKyActivity.this, "Đăng ký thành công! Vui lòng đăng nhập.", Toast.LENGTH_LONG).show();
-                        // GỌI HÀM CHUYỂN SANG ĐĂNG NHẬP
                         goToSignInActivity();
                     } else {
                         Toast.makeText(DangKyActivity.this, "Đăng ký thất bại: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();

@@ -34,13 +34,11 @@ public class FirebaseHelper {
         return user != null ? user.getUid() : null;
     }
 
-    // Bổ sung: Lấy Email người dùng hiện tại
+
     public static String getCurrentUserEmail() {
         FirebaseUser user = getFirebaseAuth().getCurrentUser();
         return user != null ? user.getEmail() : "N/A";
     }
-
-    // Bổ sung: Lấy Tên hiển thị người dùng hiện tại (nếu đã được set)
     public static String getCurrentUserName() {
         FirebaseUser user = getFirebaseAuth().getCurrentUser();
         return (user != null && user.getDisplayName() != null) ? user.getDisplayName() : "Khách hàng";

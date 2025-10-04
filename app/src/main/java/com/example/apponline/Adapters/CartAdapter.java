@@ -18,7 +18,7 @@ import java.util.List;
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
 
     private final Context context;
-    private List<OrderItem> cartList; // 🚨 Bỏ final để có thể cập nhật danh sách
+    private List<OrderItem> cartList;
     private final CartUpdateListener listener;
 
     public interface CartUpdateListener {
@@ -31,8 +31,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         this.cartList = cartList;
         this.listener = listener;
     }
-
-    // 🚨 THÊM PHƯƠNG THỨC CẬP NHẬT DANH SÁCH (Đề xuất sửa ở CartActivity)
     public void updateItems(List<OrderItem> newCartList) {
         this.cartList = newCartList;
         notifyDataSetChanged();
@@ -47,17 +45,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-        // Luôn sử dụng vị trí mới nhất cho khối click
-        // final int currentPosition = holder.getBindingAdapterPosition(); // Khai báo này không cần thiết
-        // if (currentPosition == RecyclerView.NO_POSITION) return;
-
         OrderItem item = cartList.get(position); // Dùng position vì nó ổn định hơn khi binding
 
         holder.tvName.setText(item.getName());
         holder.tvPrice.setText(String.format("Giá: %,.0f VNĐ", item.getPrice()));
         holder.tvQuantity.setText(String.valueOf(item.getQuantity()));
-
-        // --- Cập nhật hiển thị SIZE ---
         String size = item.getselectedSize();
         if (size != null && !size.isEmpty()) {
             holder.tvSize.setText("Size: " + size);
@@ -65,8 +57,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         } else {
             holder.tvSize.setVisibility(View.GONE);
         }
-
-        // --- TẢI HÌNH ẢNH SỬ DỤNG GLIDE ---
         String imageUrl = item.getImageUrl();
         if (imageUrl != null && !imageUrl.isEmpty()) {
             Glide.with(context)
@@ -78,7 +68,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             holder.ivProduct.setImageResource(R.drawable.product_placeholder);
         }
 
-        // --- Logic Giảm Số lượng ---
         holder.btnMinus.setOnClickListener(v -> {
             int clickPosition = holder.getBindingAdapterPosition();
             if (clickPosition == RecyclerView.NO_POSITION) return;
@@ -87,14 +76,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             int currentQty = clickedItem.getQuantity();
 
             if (currentQty <= 1) {
-                // Xóa mục
+
                 CartManager.getInstance().removeItem(clickedItem);
                 cartList.remove(clickPosition);
 
                 notifyItemRemoved(clickPosition);
-                // 🚨 BỎ notifyItemRangeChanged() - chỉ cần gọi listener
 
-                listener.onItemRemoved(); // Gọi callback để cập nhật tổng tiền
+
+                listener.onItemRemoved();
             } else {
                 int newQty = currentQty - 1;
                 CartManager.getInstance().updateQuantity(clickedItem, newQty);
@@ -103,7 +92,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             }
         });
 
-        // --- Logic Tăng Số lượng ---
         holder.btnPlus.setOnClickListener(v -> {
             int clickPosition = holder.getBindingAdapterPosition();
             if (clickPosition == RecyclerView.NO_POSITION) return;
@@ -116,7 +104,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             listener.onQuantityChanged();
         });
 
-        // --- Logic Xóa khỏi Giỏ ---
         holder.btnRemove.setOnClickListener(v -> {
             int clickPosition = holder.getBindingAdapterPosition();
             if (clickPosition == RecyclerView.NO_POSITION) return;
@@ -127,9 +114,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             cartList.remove(clickPosition);
 
             notifyItemRemoved(clickPosition);
-            // 🚨 BỎ notifyItemRangeChanged() - chỉ cần gọi listener
 
-            listener.onItemRemoved(); // Gọi callback để cập nhật tổng tiền
+            listener.onItemRemoved();
         });
     }
 
@@ -138,7 +124,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         return cartList.size();
     }
 
-    // ... CartViewHolder class giữ nguyên
     public static class CartViewHolder extends RecyclerView.ViewHolder {
         ImageView ivProduct;
         TextView tvName, tvPrice, tvQuantity, tvSize;

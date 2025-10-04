@@ -9,11 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
-/**
- * WishlistManager quản lý danh sách yêu thích của người dùng.
- * Sử dụng mẫu Singleton và lưu trữ/đồng bộ hóa với Firebase Firestore.
- */
 public class WishlistManager {
 
     private static final String TAG = "WishlistManager";
@@ -21,18 +16,12 @@ public class WishlistManager {
 
     private static WishlistManager instance;
 
-    // Danh sách sản phẩm yêu thích hiện tại trong bộ nhớ (cache)
     private List<Product> wishlistItems;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-
-    // =========================================================================
-    // INTERFACE CALLBACK (Sửa đổi để không cần truyền list)
-    // =========================================================================
     public interface WishlistLoadCallback {
         void onWishlistLoaded();
     }
-    // =========================================================================
 
     private WishlistManager() {
         wishlistItems = new ArrayList<>();
@@ -40,7 +29,7 @@ public class WishlistManager {
         db = FirebaseHelper.getFirestoreInstance();
         mAuth = FirebaseHelper.getFirebaseAuth();
 
-        // Tải danh sách yêu thích khi khởi tạo
+
         loadWishlistFromFirestore(null);
     }
 
@@ -55,9 +44,7 @@ public class WishlistManager {
         if (product == null || product.getId() == null) return;
 
         if (!isProductInWishlist(product)) {
-            // 🚨 ĐẢM BẢO ID ĐƯỢC GÁN TRONG CACHE (Dù đã gán ở Activity, nhưng an toàn hơn)
             if (product.getId() == null) {
-                // Trường hợp này không nên xảy ra nếu Activity đã sửa lỗi
                 Log.e(TAG, "Product ID is NULL when adding to wishlist.");
                 return;
             }
@@ -72,8 +59,6 @@ public class WishlistManager {
 
     public void removeProductFromWishlist(Product product) {
         if (product == null || product.getId() == null) return;
-
-        // Xóa sản phẩm khỏi cache bằng ID
         wishlistItems.removeIf(item -> item.getId().equals(product.getId()));
 
         String userId = FirebaseHelper.getCurrentUserId();
@@ -105,16 +90,12 @@ public class WishlistManager {
 
         DocumentReference docRef = db.collection(COLLECTION_WISHLIST).document(userId);
 
-        // Sử dụng .set() với merge: true để tạo nếu chưa có, và cập nhật nếu đã có.
-        // Điều này đơn giản hóa logic xử lý lỗi "No document to update"
-        docRef.set(new WishlistData(productIds)) // Sửa lỗi logic cập nhật/tạo mới
+
+        docRef.set(new WishlistData(productIds))
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "Wishlist saved successfully for user: " + userId))
                 .addOnFailureListener(err -> Log.e(TAG, "Error saving wishlist document: " + err.getMessage()));
     }
 
-    /**
-     * Tải danh sách yêu thích (chỉ ID) từ Firestore và sau đó tải dữ liệu chi tiết sản phẩm.
-     */
     public void loadWishlistFromFirestore(WishlistLoadCallback callback) {
         String userId = FirebaseHelper.getCurrentUserId();
 
@@ -151,10 +132,6 @@ public class WishlistManager {
                 });
     }
 
-    /**
-     * Tải chi tiết sản phẩm từ IDs đã lấy được và thêm vào wishlistItems.
-     * 🚨 CHỨA SỬA LỖI GÁN DOCUMENT ID QUAN TRỌNG 🚨
-     */
     private void loadProductDetailsByIds(List<String> productIds, WishlistLoadCallback callback) {
         if (productIds.isEmpty()) {
             if (callback != null) callback.onWishlistLoaded();
@@ -170,11 +147,9 @@ public class WishlistManager {
                         if (doc.exists()) {
                             Product product = doc.toObject(Product.class);
 
-                            // 🚨 SỬA LỖI QUAN TRỌNG: GÁN DOCUMENT ID
                             if (product != null) {
                                 product.setId(doc.getId());
                             }
-                            // 🚨 KẾT THÚC SỬA LỖI
 
                             if (product != null && !isProductInWishlist(product)) {
                                 wishlistItems.add(product);

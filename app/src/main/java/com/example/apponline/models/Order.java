@@ -14,13 +14,10 @@ public class Order implements Serializable {
     private String paymentMethod;
     private List<OrderItem> items;
 
-    // Constructor rỗng bắt buộc cho Firebase/Firestore
     public Order() {
-        // Khởi tạo để đảm bảo trường không null trước khi Firestore ánh xạ
         this.items = new ArrayList<>();
     }
 
-    // Constructor cũ (giữ lại nếu có code legacy sử dụng)
     public Order(String orderId, String userId, double totalAmount, String shippingAddress, List<OrderItem> items) {
         this.orderId = orderId;
         this.userId = userId;
@@ -31,7 +28,6 @@ public class Order implements Serializable {
         this.items = items;
     }
 
-    // Constructor MỚI (Sử dụng trong CheckoutActivity)
     public Order(String orderId, String userId, double totalAmount, String shippingAddress, List<OrderItem> items, String paymentMethod) {
         this.orderId = orderId;
         this.userId = userId;
@@ -64,12 +60,8 @@ public class Order implements Serializable {
     public String getPaymentMethod() { return paymentMethod; }
     public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
 
-    /**
-     * 🚨 SỬA LỖI QUAN TRỌNG: Đảm bảo Getter không bao giờ trả về NULL
-     */
     public List<OrderItem> getItems() {
         if (items == null) {
-            // Khởi tạo nếu Firestore cố gắng gán NULL (như dữ liệu bạn đã thấy)
             items = new ArrayList<>();
         }
         return items;

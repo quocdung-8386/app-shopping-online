@@ -29,7 +29,7 @@ public class DangNhapActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
-    private ActivityResultLauncher<Intent> googleSignInLauncher; // <-- Khai báo Launcher
+    private ActivityResultLauncher<Intent> googleSignInLauncher;
     private EditText etEmail, etPassword;
     private Button btnSignIn, btnGoogleSignIn;
     private TextView tvClickHere;
@@ -41,8 +41,6 @@ public class DangNhapActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dang_nhap);
 
         mAuth = FirebaseHelper.getFirebaseAuth();
-
-        // 1. Khởi tạo Activity Result Launcher
         googleSignInLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -55,16 +53,11 @@ public class DangNhapActivity extends AppCompatActivity {
                 }
         );
 
-        // 2. Cấu hình Google Sign-In Options (GSO)
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
-
-        // 3. Xây dựng GoogleSignInClient
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        // Khởi tạo Views
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         btnSignIn = findViewById(R.id.btnSignIn);
@@ -72,13 +65,9 @@ public class DangNhapActivity extends AppCompatActivity {
         tvClickHere = findViewById(R.id.tvClickHere);
         cbTerms = findViewById(R.id.cbTerms);
         ImageButton btnBack = findViewById(R.id.btnBack);
-
-        // Kiểm tra nếu đã đăng nhập thì chuyển hướng
         if (FirebaseHelper.isUserLoggedIn()) {
             goToMainActivity();
         }
-
-        // Gắn sự kiện cho các nút
         btnSignIn.setOnClickListener(v -> handleSignIn());
         btnGoogleSignIn.setOnClickListener(v -> signInWithGoogle());
 
@@ -88,8 +77,6 @@ public class DangNhapActivity extends AppCompatActivity {
 
         btnBack.setOnClickListener(v -> finish());
     }
-
-    // Xử lý khi nhấn nút Đăng nhập Google
     private void signInWithGoogle() {
         if (!cbTerms.isChecked()) {
             Toast.makeText(this, "Vui lòng đồng ý với Điều khoản dịch vụ.", Toast.LENGTH_SHORT).show();
@@ -97,11 +84,8 @@ public class DangNhapActivity extends AppCompatActivity {
         }
 
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        // SỬ DỤNG LAUNCHER MỚI thay vì startActivityForResult
         googleSignInLauncher.launch(signInIntent);
     }
-
-    // Phương thức xử lý kết quả trả về từ Google
     private void handleGoogleSignInResult(Intent data) {
         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
         try {
@@ -111,8 +95,6 @@ public class DangNhapActivity extends AppCompatActivity {
             Toast.makeText(this, "Đăng nhập Google thất bại: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
-
-    // Xác thực Firebase bằng ID Token của Google
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)

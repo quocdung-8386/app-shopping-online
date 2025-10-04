@@ -19,7 +19,7 @@ import java.util.Locale;
 
 public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapter.OrderViewHolder> {
 
-    // 🚨 BƯỚC 1: KHAI BÁO INTERFACE
+
     public interface OnOrderClickListener {
         void onOrderClick(Order order);
     }
@@ -28,20 +28,14 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
     private final List<Order> orderList;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
 
-    // 🚨 BƯỚC 2: KHAI BÁO THUỘC TÍNH LISTENER
+
     private final OnOrderClickListener listener;
 
-    // 🚨 BƯỚC 3: SỬA CONSTRUCTOR ĐỂ NHẬN LISTENER
     public OrderHistoryAdapter(Context context, List<Order> orderList, OnOrderClickListener listener) {
         this.context = context;
         this.orderList = orderList;
         this.listener = listener; // Gán listener
     }
-
-    // Lưu ý: Nếu bạn vẫn còn code cũ gọi constructor 2 tham số, bạn nên loại bỏ nó hoặc thêm constructor sau:
-    // public OrderHistoryAdapter(Context context, List<Order> orderList) {
-    //     this(context, orderList, null);
-    // }
 
     @NonNull
     @Override
@@ -54,22 +48,17 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         Order order = orderList.get(position);
 
-        // 1. Order ID
         holder.tvOrderId.setText("Mã: #" + (order.getOrderId() != null ? order.getOrderId() : "N/A"));
-        // 2. Order Date (giữ nguyên)
         try {
             String date = dateFormat.format(new Date(order.getTimestamp()));
             holder.tvOrderDate.setText("Ngày đặt: " + date);
         } catch (Exception e) {
             holder.tvOrderDate.setText("Ngày đặt: Lỗi định dạng");
         }
-        // 3. Order Total (giữ nguyên)
         String totalText = String.format("Tổng: %,.0f VNĐ", order.getTotalAmount());
         holder.tvOrderTotal.setText(totalText);
-        // 4. Order Status (giữ nguyên)
         holder.tvOrderStatus.setText(order.getStatus() != null ? order.getStatus() : "Không xác định");
 
-        // 5. Order Items & Thumbnail (giữ nguyên)
         if (!order.getItems().isEmpty()) {
             holder.tvOrderItemsCount.setText(order.getItems().size() + " Sản phẩm");
             OrderItem firstItem = order.getItems().get(0);
@@ -84,9 +73,7 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
             holder.ivOrderProductThumbnail.setImageResource(R.drawable.product_placeholder);
         }
 
-        // 🚨 BƯỚC 4: THÊM LISTENER CHO ITEM VIEW
         holder.itemView.setOnClickListener(v -> {
-            // Kiểm tra và gọi phương thức click
             if (listener != null) {
                 listener.onOrderClick(order);
             }
@@ -97,11 +84,6 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
     public int getItemCount() {
         return orderList.size();
     }
-
-    /**
-     * Hàm tiện ích để cập nhật dữ liệu từ Activity
-     * @param newOrders Danh sách đơn hàng mới
-     */
     public void updateData(List<Order> newOrders) {
         this.orderList.clear();
         this.orderList.addAll(newOrders);

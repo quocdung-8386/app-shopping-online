@@ -11,7 +11,7 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppOnline">
         <activity
@@ -26,8 +26,6 @@
         <activity android:name=".OnboardingActivity"
             android:exported="false"
             android:theme="@style/Theme.AppOnline.NoActionBar"/>
-
-        <!-- Đăng Nhập (Main Launcher) -->
         <activity
             android:name=".DangNhapActivity"
             android:exported="true"
@@ -35,43 +33,35 @@
             android:theme="@style/Theme.AppOnline.NoActionBar">
         </activity>
 
-        <!-- Đăng Ký -->
         <activity
             android:name=".DangKyActivity"
             android:label="Đăng Ký Tài Khoản"
             android:theme="@style/Theme.AppOnline.NoActionBar" />
-
-        <!-- Main -->
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:exported="false"
             android:theme="@style/Theme.AppOnline.NoActionBar" />
 
-        <!-- Danh Sách Sản Phẩm -->
         <activity
             android:name=".ProductListActivity"
             android:label="Danh Sách Sản Phẩm"
             android:theme="@style/Theme.AppOnline.NoActionBar" />
 
-        <!-- Chi Tiết Sản Phẩm -->
         <activity
             android:name=".ProductDetailActivity"
             android:label="Chi Tiết Sản Phẩm"
             android:theme="@style/Theme.AppOnline.NoActionBar" />
 
-        <!-- Giỏ Hàng -->
         <activity
             android:name=".CartActivity"
             android:label="Giỏ Hàng"
             android:theme="@style/Theme.AppOnline.NoActionBar" />
 
-        <!-- Thanh Toán -->
         <activity
             android:name=".CheckoutActivity"
             android:label="Thanh Toán"
             android:theme="@style/Theme.AppOnline.NoActionBar" />
-        <!-- Chọn Địa Chỉ -->
         <activity android:name=".SelectAddressActivity"
             android:label="Chọn Địa Chỉ Nhận Hàng"
             android:theme="@style/Theme.AppOnline.NoActionBar" />
@@ -82,19 +72,16 @@
             android:name=".SearchActivity"
             android:label="Tim Kiếm Sản Phẩm"
             android:theme="@style/Theme.AppOnline.NoActionBar" />
-        <!-- Hóa Đơn -->
         <activity
             android:name=".InvoiceActivity"
             android:label="Hóa Đơn"
             android:theme="@style/Theme.AppOnline.NoActionBar" />
 
-        <!-- Lịch Sử Đơn Hàng -->
         <activity
             android:name=".OrdersHistoryActivity"
             android:label="Lịch Sử Đơn Hàng"
             android:theme="@style/Theme.AppOnline.NoActionBar" />
 
-        <!-- Hồ Sơ Cá Nhân -->
         <activity
             android:name=".FavoriteActivity"
             android:label="Yêu Thích"

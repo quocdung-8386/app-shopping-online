@@ -28,10 +28,6 @@ public class CartManager {
         return instance;
     }
 
-    /**
-     * Lưu giỏ hàng hiện tại của người dùng vào Firestore.
-     * ĐÃ CẬP NHẬT: Thêm imageUrl VÀ itemStatus vào dữ liệu lưu.
-     */
     public void saveCartToFirestore(String userId) {
         if (userId == null || userId.isEmpty()) {
             Log.e(TAG, "Không thể lưu giỏ hàng: User ID rỗng.");
@@ -46,9 +42,9 @@ public class CartManager {
             itemMap.put("name", item.getName());
             itemMap.put("price", item.getPrice());
             itemMap.put("quantity", item.getQuantity());
-            itemMap.put("selectedSize", item.getselectedSize()); // <-- ĐÃ SỬA LỖI Ở ĐÂY (getSelectedSize())
+            itemMap.put("selectedSize", item.getselectedSize());
             itemMap.put("imageUrl", item.getImageUrl());
-            itemMap.put("itemStatus", item.getItemStatus()); // <-- THÊM itemStatus vào đây
+            itemMap.put("itemStatus", item.getItemStatus());
             itemsToSave.add(itemMap);
         }
 
@@ -61,10 +57,6 @@ public class CartManager {
                 .addOnFailureListener(e -> Log.e(TAG, "Lỗi lưu giỏ hàng vào Firestore", e));
     }
 
-    /**
-     * Tải giỏ hàng từ Firestore và khôi phục trạng thái vào bộ nhớ.
-     * ĐÃ CẬP NHẬT: Đọc imageUrl VÀ itemStatus từ dữ liệu Firestore.
-     */
     public void fetchCartFromFirestore(String userId, FirestoreFetchCallback callback) {
         if (userId == null || userId.isEmpty()) {
             callback.onComplete(false);
@@ -94,9 +86,8 @@ public class CartManager {
                                     int quantity = ((Long) itemMap.get("quantity")).intValue();
                                     String size = (String) itemMap.get("selectedSize");
                                     String imageUrl = (String) itemMap.get("imageUrl");
-                                    String itemStatus = (String) itemMap.get("itemStatus"); // <-- ĐỌC itemStatus từ đây
+                                    String itemStatus = (String) itemMap.get("itemStatus");
 
-                                    // Sử dụng constructor mới của OrderItem có imageUrl và itemStatus
                                     OrderItem item = new OrderItem(productId, name, price, quantity, size, imageUrl, itemStatus);
                                     cartItems.add(item);
                                 } catch (Exception e) {
@@ -117,10 +108,6 @@ public class CartManager {
         void onComplete(boolean success);
     }
 
-    /**
-     * Thêm một sản phẩm vào giỏ hàng.
-     * ĐÃ CẬP NHẬT: Thêm imageUrl từ Product và gán itemStatus mặc định "Pending".
-     */
     public void addItem(Product product, int quantity, String selectedSize) {
         if (selectedSize == null || selectedSize.trim().isEmpty()) {
             selectedSize = "M";
@@ -132,12 +119,10 @@ public class CartManager {
         for (OrderItem item : cartItems) {
             if (item.getProductId().equals(productId) && item.getselectedSize().equals(finalSize)) { // <-- ĐÃ SỬA LỖI Ở ĐÂY (getSelectedSize())
                 item.setQuantity(item.getQuantity() + quantity);
-                // Giữ nguyên itemStatus hiện có nếu đã tồn tại trong giỏ hàng
+
                 return;
             }
         }
-
-        // Thêm sản phẩm mới - SỬ DỤNG CONSTRUCTOR CÓ imageUrl VÀ itemStatus
         OrderItem newItem = new OrderItem(
                 productId,
                 product.getName(),
@@ -145,12 +130,11 @@ public class CartManager {
                 quantity,
                 finalSize,
                 product.getImageUrl(),
-                "Pending" // <-- Gán itemStatus mặc định khi thêm vào giỏ hàng
+                "Thành công"
         );
         cartItems.add(newItem);
     }
 
-    // Các phương thức logic giỏ hàng khác (giữ nguyên hoặc đã được sửa đổi nhỏ)
 
     public void removeItem(OrderItem item) {
         cartItems.remove(item);

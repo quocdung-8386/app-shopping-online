@@ -1,29 +1,29 @@
 package com.example.apponline.Adapters;
 
 import android.content.Context;
-import android.content.Intent; // Import Intent
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast; // Vẫn có thể dùng cho mục đích debugging
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.apponline.R;
-import com.example.apponline.ProductListActivity; // Import Activity đích của bạn
+import com.example.apponline.ProductListActivity;
+import com.example.apponline.models.Category;
+
 import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
     private final Context context;
-    private final List<String> categoryList;
-    // KHÔNG CẦN private final CategoryClickListener listener; NỮA
+    private final List<Category> categoryList;
 
-    // Constructor đã sửa đổi: Loại bỏ listener
-    public CategoryAdapter(Context context, List<String> categoryList) {
+    public CategoryAdapter(Context context, List<Category> categoryList) {
         this.context = context;
         this.categoryList = categoryList;
     }
@@ -31,32 +31,28 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     @NonNull
     @Override
     public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Ánh xạ với layout item_category_icon.xml
+
         View view = LayoutInflater.from(context).inflate(R.layout.item_category_icon, parent, false);
         return new CategoryViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
-        String categoryName = categoryList.get(position);
-        holder.categoryName.setText(categoryName);
+             Category category = categoryList.get(position);
+        String categoryName = category.getName();
 
-        // TODO: Thiết lập ImageView (categoryIcon) dựa trên tên danh mục 
+        holder.categoryIcon.setImageResource(category.getIconResId());
 
-        // Xử lý sự kiện click TRỰC TIẾP
+             holder.categoryName.setText(categoryName);
+
         holder.itemView.setOnClickListener(v -> {
-            // Hiển thị Toast (Tùy chọn, chỉ để kiểm tra)
+
             Toast.makeText(context, "Mở danh sách cho: " + categoryName, Toast.LENGTH_SHORT).show();
 
-            // Bắt đầu Activity mới và truyền dữ liệu categoryName
-            Intent intent = new Intent(context, ProductListActivity.class); // Thay ProductListActivity bằng Activity đích của bạn
+            Intent intent = new Intent(context, ProductListActivity.class);
             intent.putExtra("CATEGORY_NAME", categoryName);
 
-            // Thêm FLAG_ACTIVITY_NEW_TASK nếu context là Application Context 
-            // Nếu context là Activity Context (như trong trường hợp này), thì không bắt buộc
-            // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
-
-            context.startActivity(intent); // Mở Activity
+            context.startActivity(intent);
         });
     }
 

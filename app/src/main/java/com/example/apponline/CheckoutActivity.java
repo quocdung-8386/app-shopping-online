@@ -44,21 +44,15 @@ public class CheckoutActivity extends AppCompatActivity {
     private FirebaseFirestore db;
 
     private Address currentShippingAddressObject = null;
-    private final String DEFAULT_ADDRESS_TEXT = "⚠️ Chạm để CHỌN hoặc THÊM địa chỉ giao hàng";
+    private final String DEFAULT_ADDRESS_TEXT = "Chạm để CHỌN hoặc THÊM địa chỉ giao hàng";
     private static final String TAG = "CheckoutActivity";
 
-    // Khai báo hằng số KEY đã sử dụng trong SelectAddressActivity
     private static final String SELECTED_ADDRESS_KEY = "selected_address";
-
-    // === 1. ĐĂNG KÝ ACTIVITY RESULT LAUNCHER: Cập nhật TỨC THÌ khi địa chỉ được chọn ===
     private final ActivityResultLauncher<Intent> selectAddressLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                // Kiểm tra kết quả OK và dữ liệu không rỗng
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                     Intent data = result.getData();
-
-                    // 🚀 ĐÃ SỬA LỖI: Sử dụng getParcelableExtra() và KEY chính xác
                     Address newAddress = data.getParcelableExtra(SELECTED_ADDRESS_KEY);
 
                     if (newAddress != null) {
@@ -69,8 +63,6 @@ public class CheckoutActivity extends AppCompatActivity {
                 }
             }
     );
-    // =================================================================================
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +71,6 @@ public class CheckoutActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseHelper.getFirestoreInstance();
-
-        // Ánh xạ Views
         btnPlaceOrder = findViewById(R.id.btnFinalPlaceOrder);
         tvFinalTotal = findViewById(R.id.tvCheckoutTotal);
         rgPaymentMethods = findViewById(R.id.rgPaymentMethods);
@@ -94,7 +84,6 @@ public class CheckoutActivity extends AppCompatActivity {
 
         setupOrderItemsList();
 
-        // === TẢI ĐỊA CHỈ ĐÃ LƯU (MẶC ĐỊNH/ĐẦU TIÊN) KHI KHỞI TẠO ===
         loadDefaultAddress();
 
         setupPaymentMethodSelection();
@@ -120,10 +109,9 @@ public class CheckoutActivity extends AppCompatActivity {
                         currentShippingAddressObject = defaultAddress;
                         updateShippingAddressUI(defaultAddress);
                     } else {
-                        // 2. Nếu không có mặc định, tải địa chỉ ĐẦU TIÊN
                         loadFirstAddress(user.getUid());
                     }
-                    updateSummary(); // Cập nhật tổng tiền
+                    updateSummary();
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Lỗi tải địa chỉ mặc định: " + e.getMessage());
@@ -131,7 +119,6 @@ public class CheckoutActivity extends AppCompatActivity {
                     updateSummary();
                 });
     }
-
     private void loadFirstAddress(String userId) {
         db.collection("users")
                 .document(userId)
@@ -148,7 +135,6 @@ public class CheckoutActivity extends AppCompatActivity {
                     }
                 });
     }
-
     private void updateShippingAddressUI(Address address) {
         if (address == null) {
             tvShippingAddress.setText(DEFAULT_ADDRESS_TEXT);
@@ -165,8 +151,6 @@ public class CheckoutActivity extends AppCompatActivity {
             tvShippingAddress.setText(addressLine1 + "\n" + addressLine2);
         }
     }
-
-
     private void setupOrderItemsList() {
         List<OrderItem> items = CartManager.getInstance().getCartItems();
         CartAdapter orderAdapter = new CartAdapter(this, items, null);
@@ -177,8 +161,6 @@ public class CheckoutActivity extends AppCompatActivity {
     private void updateSummary() {
         double finalTotal = CartManager.getInstance().calculateTotal();
         tvFinalTotal.setText(String.format("Tổng cộng: %,.0f VNĐ", finalTotal));
-
-        // Gọi lại để đảm bảo UI hiển thị trạng thái địa chỉ chính xác sau khi tải/cập nhật
         updateShippingAddressUI(currentShippingAddressObject);
     }
 
@@ -190,11 +172,6 @@ public class CheckoutActivity extends AppCompatActivity {
     private Address getShippingAddressObject() {
         return currentShippingAddressObject;
     }
-
-    // =========================================================================
-    // LOGIC ĐẶT HÀNG
-    // =========================================================================
-
     private void setupPaymentMethodSelection() {
         rgPaymentMethods.setOnCheckedChangeListener((group, checkedId) -> {
             RadioButton selectedRadioButton = findViewById(checkedId);
@@ -209,7 +186,6 @@ public class CheckoutActivity extends AppCompatActivity {
             selectedPaymentMethod = rbCOD.getText().toString();
         }
     }
-
     private void processOrderPlacement() {
         String userId = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : null;
 
@@ -217,7 +193,6 @@ public class CheckoutActivity extends AppCompatActivity {
             Toast.makeText(this, "Vui lòng đăng nhập lại.", Toast.LENGTH_SHORT).show();
             return;
         }
-
         List<OrderItem> cartItems = CartManager.getInstance().getCartItems();
         if (cartItems.isEmpty()) {
             Toast.makeText(this, "Giỏ hàng của bạn đang trống!", Toast.LENGTH_SHORT).show();
@@ -226,7 +201,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
         Address shippingAddressObject = getShippingAddressObject();
         if (shippingAddressObject == null) {
-            Toast.makeText(this, "⚠️ Vui lòng chọn địa chỉ giao hàng.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Vui lòng chọn địa chỉ giao hàng.", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -236,8 +211,6 @@ public class CheckoutActivity extends AppCompatActivity {
         }
 
         double finalTotal = CartManager.getInstance().calculateTotal();
-
-        // Fix lỗi potential getDetailAddress() bằng try/catch cho String
         String detailAddressString;
         try {
             detailAddressString = shippingAddressObject.getDetailAddress();
@@ -270,15 +243,12 @@ public class CheckoutActivity extends AppCompatActivity {
                 cartItems,
                 selectedPaymentMethod
         );
-
-        // 1. Lưu đơn hàng
         FirebaseFirestore db = FirebaseHelper.getFirestoreInstance();
         btnPlaceOrder.setEnabled(false);
         db.collection("orders")
                 .document(newOrderId)
                 .set(newOrder)
                 .addOnSuccessListener(aVoid -> {
-                    // 2. Xóa giỏ hàng và chuyển màn hình (giữ nguyên)
                     CartManager.getInstance().clearCart();
                     String currentUserId = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : null;
                     if (currentUserId != null) {
@@ -304,7 +274,6 @@ public class CheckoutActivity extends AppCompatActivity {
                     Toast.makeText(CheckoutActivity.this, "Lỗi đặt hàng: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
-
     private boolean simulatePayment(String method) {
         return true;
     }

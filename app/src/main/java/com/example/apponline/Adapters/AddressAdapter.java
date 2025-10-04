@@ -18,11 +18,9 @@ import java.util.List;
 
 public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressViewHolder> {
 
-    // === 1. ĐỊNH NGHĨA INTERFACE CALLBACK MỚI ===
     public interface OnAddressSelectedListener {
         void onAddressSelected(Address address);
 
-        // 🚨 THÊM PHƯƠNG THỨC XỬ LÝ SỰ KIỆN XÓA
         void onAddressDeleted(Address address);
     }
 
@@ -31,7 +29,6 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
     private final OnAddressSelectedListener listener;
     private int selectedPosition = 0;
 
-    // === 2. CONSTRUCTOR (GIỮ NGUYÊN) ===
     public AddressAdapter(Context context, List<Address> addressList, OnAddressSelectedListener listener) {
         this.context = context;
         this.addressList = addressList;
@@ -51,16 +48,14 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
 
 
         holder.namePhoneText.setText(address.getName() + " | " + address.getPhoneNumber());
-        // Giả định getCityState() là Phường/Quận/TP
-        holder.detailAddressText.setText(address.getDetailAddress() + ", " + address.getCityState());
+          holder.detailAddressText.setText(address.getDetailAddress() + ", " + address.getCityState());
 
 
         holder.radioButton.setChecked(position == selectedPosition);
         holder.defaultTag.setVisibility(address.isDefault() ? View.VISIBLE : View.GONE);
         holder.shippingTag.setVisibility(address.isShippingAddress() ? View.VISIBLE : View.GONE);
 
-        // 4. Xử lý sự kiện click để CHỌN địa chỉ
-        holder.itemView.setOnClickListener(v -> {
+               holder.itemView.setOnClickListener(v -> {
             int previousSelectedPosition = selectedPosition;
             selectedPosition = position;
 
@@ -72,14 +67,12 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
             }
         });
 
-        // 🚨 5. XỬ LÝ SỰ KIỆN CLICK để XOÁ địa chỉ
+
         holder.btnDeleteAddress.setOnClickListener(v -> {
-            // Gọi callback để thông báo cho Activity/Fragment rằng địa chỉ này cần được xóa
+
             if (listener != null) {
                 listener.onAddressDeleted(address);
             }
-            // Lưu ý: Logic xóa khỏi danh sách (addressList.remove) và notifyDataSetChanged()
-            // nên được thực hiện TRONG Activity/Fragment sau khi xác nhận xóa thành công.
         });
     }
 
@@ -88,12 +81,10 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
         return addressList.size();
     }
 
-    // === 6. PHƯƠNG THỨC CẬP NHẬT VỊ TRÍ ĐƯỢC CHỌN (Hữu ích khi xóa) ===
     public void setSelectedPosition(int position) {
         if (position >= 0 && position < addressList.size()) {
             this.selectedPosition = position;
         } else {
-            // Xử lý trường hợp danh sách rỗng hoặc position không hợp lệ
             this.selectedPosition = -1;
         }
     }
@@ -102,7 +93,6 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
     public static class AddressViewHolder extends RecyclerView.ViewHolder {
         TextView namePhoneText, detailAddressText, defaultTag, shippingTag;
         RadioButton radioButton;
-        // 🚨 THÊM ImageButton
         ImageButton btnDeleteAddress;
 
         public AddressViewHolder(@NonNull View itemView) {
@@ -114,7 +104,6 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
             shippingTag = itemView.findViewById(R.id.shipping_tag);
             radioButton = itemView.findViewById(R.id.address_radio_button);
 
-            // 🚨 ÁNH XẠ NÚT XOÁ
             btnDeleteAddress = itemView.findViewById(R.id.btnDeleteAddress);
 
             radioButton.setClickable(false);

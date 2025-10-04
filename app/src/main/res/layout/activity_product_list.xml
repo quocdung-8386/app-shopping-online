@@ -44,7 +44,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         tools:listitem="@layout/item_product_grid"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="2" /> <TextView
+        app:spanCount="2" />
+    <TextView
     android:id="@+id/tvNoProducts"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

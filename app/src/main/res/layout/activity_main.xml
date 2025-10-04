@@ -55,156 +55,187 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:text="Danh mục nổi bật"
                 android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"
-                android:layout_marginStart="16dp"/>
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_categories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clipToPadding="false"
                 android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:paddingStart="16dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:paddingStart="16dp"
-                android:clipToPadding="false"
-                tools:listitem="@layout/item_category_icon"/>
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_category_icon"
+                android:nestedScrollingEnabled="false" />
+
+            <ImageView
+                android:id="@+id/banner_image"
+                android:layout_height="160dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/banner_trungthu"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="16dp">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/card_banner"
-                    android:layout_width="match_parent"
-                    android:layout_height="180dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp"  app:layout_constraintTop_toTopOf="parent">
-
-                    <androidx.viewpager2.widget.ViewPager2
-                        android:id="@+id/banner_view_pager"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
-
-                </androidx.cardview.widget.CardView>
-
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/banner_indicator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="10dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@android:color/transparent"
-                    app:tabBackground="@drawable/tab_indicator_selector"
-                    app:tabGravity="center"
-                    app:tabIndicatorHeight="0dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/card_banner"
-                    app:layout_constraintStart_toStartOf="@+id/card_banner"
-                    app:layout_constraintEnd_toEndOf="@+id/card_banner"/>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="16dp"
-                android:paddingHorizontal="16dp">
                 <TextView
+                    android:id="@+id/tv_daily_deals_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_marginStart="16dp"
                     android:text="🔥 Ưu đãi trong ngày"
-                    android:textSize="16sp"
                     android:textColor="@android:color/black"
-                    android:textStyle="bold" />
-                <TextView
-                    android:id="@+id/tv_view_all_deals"
-                    android:layout_width="wrap_content"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/btn_daily_deal_prev"
+                    android:layout_width="23dp"
+                    android:layout_height="85dp"
+                    android:background="@android:color/white"
+                    android:src="@drawable/ic_arrow_back"
+                    android:contentDescription="Xem sản phẩm trước"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/rv_daily_deals"
+                    app:layout_constraintBottom_toBottomOf="@+id/rv_daily_deals" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_daily_deals"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Xem tất cả >"
-                    android:textColor="#FF4081"
-                    android:textSize="14sp"
-                    android:clickable="true"/>
-            </LinearLayout>
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:paddingStart="4dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="4dp"
+                    android:paddingBottom="8dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintStart_toEndOf="@id/btn_daily_deal_prev"
+                    app:layout_constraintEnd_toStartOf="@id/btn_daily_deal_next"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_daily_deals_title"
+                    android:nestedScrollingEnabled="false"
+                    tools:listitem="@layout/item_product_small" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_daily_deals"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:paddingStart="16dp"
-                android:clipToPadding="false"
-                tools:listitem="@layout/item_product_small"/>
-
+                <ImageButton
+                    android:id="@+id/btn_daily_deal_next"
+                    android:layout_width="23dp"
+                    android:layout_height="85dp"
+                    android:layout_marginEnd="4dp"
+                    android:background="@android:color/white"
+                    android:contentDescription="Xem sản phẩm kế tiếp"
+                    android:src="@drawable/ic_arrow_forward"
+                    app:layout_constraintBottom_toBottomOf="@+id/rv_daily_deals"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/rv_daily_deals"
+                    app:layout_constraintVertical_bias="0.565" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/special_offer_banner_bg"
+                android:clickable="true"
                 android:contentDescription="Banner ưu đãi đặc biệt"
-                android:clickable="true"/>
+                android:scaleType="centerCrop"
+                android:src="@drawable/special_offer_banner" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="✨ Sản phẩm nổi bật"
-                android:textSize="16sp"
-                android:textColor="@android:color/black"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"
-                android:layout_marginStart="16dp"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_featured_products"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:paddingStart="16dp"
-                android:clipToPadding="false"
-                tools:listitem="@layout/item_product_small"/>
+                android:layout_marginTop="16dp">
 
+                <TextView
+                    android:id="@+id/tv_featured_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="✨ Sản phẩm nổi bật"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <ImageButton
+                    android:id="@+id/btn_featured_prev"
+                    android:layout_width="23dp"
+                    android:layout_height="85dp"
+                    android:background="@android:color/white"
+                    android:src="@drawable/ic_arrow_back"
+                    android:contentDescription="Xem sản phẩm trước"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/rv_featured_products"
+                    app:layout_constraintBottom_toBottomOf="@id/rv_featured_products" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_featured_products"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:paddingStart="4dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="4dp"
+                    android:paddingBottom="8dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintStart_toEndOf="@id/btn_featured_prev"
+                    app:layout_constraintEnd_toStartOf="@id/btn_featured_next"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_featured_title"
+                    android:nestedScrollingEnabled="false"
+                    tools:listitem="@layout/item_product_small" />
+
+                <ImageButton
+                    android:id="@+id/btn_featured_next"
+                    android:layout_width="23dp"
+                    android:layout_height="85dp"
+                    android:layout_marginEnd="4dp"
+                    android:background="@android:color/white"
+                    android:contentDescription="Xem sản phẩm kế tiếp"
+                    android:src="@drawable/ic_arrow_forward"
+                    app:layout_constraintBottom_toBottomOf="@id/rv_featured_products"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/rv_featured_products" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/hot_summer_sale_ad"
+                android:clickable="true"
                 android:contentDescription="Banner quảng cáo"
-                android:clickable="true"/>
+                android:scaleType="center"
+                android:src="@drawable/autumn_sale" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tài trợ (Quảng cáo)"
-                android:textSize="14sp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginStart="16dp"/>
+                android:text="Tài trợ (Quảng cáo)"
+                android:textSize="14sp" />
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
+            <ImageView
+                android:id="@+id/sponsored_image_view"
+                android:layout_height="160dp"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="32dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
-                android:clickable="true">
-            </androidx.cardview.widget.CardView>
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/nha_tai_tro"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
