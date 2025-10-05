@@ -16,8 +16,8 @@ public class Order implements Serializable {
 
     public Order() {
         this.items = new ArrayList<>();
+        this.status = "Pending";
     }
-
     public Order(String orderId, String userId, double totalAmount, String shippingAddress, List<OrderItem> items) {
         this.orderId = orderId;
         this.userId = userId;
@@ -26,25 +26,25 @@ public class Order implements Serializable {
         this.status = "Thành công";
         this.shippingAddress = shippingAddress;
         this.items = items;
+        this.paymentMethod = "Unknown";
     }
-
     public Order(String orderId, String userId, double totalAmount, String shippingAddress, List<OrderItem> items, String paymentMethod) {
         this.orderId = orderId;
         this.userId = userId;
         this.timestamp = System.currentTimeMillis();
         this.totalAmount = totalAmount;
-        this.status = "Thành công";
+        this.status = "Success";
         this.shippingAddress = shippingAddress;
         this.items = items;
         this.paymentMethod = paymentMethod;
     }
-
 
     public String getOrderId() { return orderId; }
     public void setOrderId(String orderId) { this.orderId = orderId; }
 
     public String getUserId() { return userId; }
     public void setUserId(String userId) { this.userId = userId; }
+
     public long getTimestamp() { return timestamp; }
     public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
 

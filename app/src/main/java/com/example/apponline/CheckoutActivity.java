@@ -21,13 +21,16 @@ import com.example.apponline.Adapters.CartAdapter;
 import com.example.apponline.firebase.CartManager;
 import com.example.apponline.firebase.FirebaseHelper;
 import com.example.apponline.firebase.NotificationHelper;
+import com.example.apponline.firebase.OrderManager;
 import com.example.apponline.models.Address;
 import com.example.apponline.models.Order;
 import com.example.apponline.models.OrderItem;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CheckoutActivity extends AppCompatActivity {
@@ -42,6 +45,7 @@ public class CheckoutActivity extends AppCompatActivity {
     private String selectedPaymentMethod = null;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     private Address currentShippingAddressObject = null;
     private final String DEFAULT_ADDRESS_TEXT = "Chạm để CHỌN hoặc THÊM địa chỉ giao hàng";
@@ -71,6 +75,8 @@ public class CheckoutActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseHelper.getFirestoreInstance();
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         btnPlaceOrder = findViewById(R.id.btnFinalPlaceOrder);
         tvFinalTotal = findViewById(R.id.tvCheckoutTotal);
         rgPaymentMethods = findViewById(R.id.rgPaymentMethods);
@@ -83,11 +89,8 @@ public class CheckoutActivity extends AppCompatActivity {
         }
 
         setupOrderItemsList();
-
         loadDefaultAddress();
-
         setupPaymentMethodSelection();
-
         btnPlaceOrder.setOnClickListener(v -> processOrderPlacement());
     }
     private void loadDefaultAddress() {
@@ -186,6 +189,21 @@ public class CheckoutActivity extends AppCompatActivity {
             selectedPaymentMethod = rbCOD.getText().toString();
         }
     }
+    private boolean simulatePayment(String method) {
+        return true;
+    }
+
+    private void logPurchaseEvent(String orderId, double totalAmount) {
+        Bundle params = new Bundle();
+
+        params.putString(FirebaseAnalytics.Param.TRANSACTION_ID, orderId);
+        params.putDouble(FirebaseAnalytics.Param.VALUE, totalAmount);
+        params.putString(FirebaseAnalytics.Param.CURRENCY, "VND");
+
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE, params);
+        Log.d(TAG, "Firebase Analytics PURCHASE event logged: " + orderId + ", Total: " + totalAmount);
+    }
+
     private void processOrderPlacement() {
         String userId = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : null;
 
@@ -232,23 +250,27 @@ public class CheckoutActivity extends AppCompatActivity {
             Toast.makeText(this, "Thanh toán thất bại. Vui lòng thử phương thức khác.", Toast.LENGTH_LONG).show();
             return;
         }
-
         String newOrderId = "ORD" + String.valueOf(System.currentTimeMillis()).substring(4);
+        final String finalOrderId = newOrderId;
 
         Order newOrder = new Order(
-                newOrderId,
+                finalOrderId,
                 userId,
                 finalTotal,
                 shippingAddress,
                 cartItems,
                 selectedPaymentMethod
         );
-        FirebaseFirestore db = FirebaseHelper.getFirestoreInstance();
+
         btnPlaceOrder.setEnabled(false);
         db.collection("orders")
-                .document(newOrderId)
+                .document(finalOrderId)
                 .set(newOrder)
                 .addOnSuccessListener(aVoid -> {
+
+                    OrderManager.getInstance().updateProductSales(newOrder.getItems());
+                    logPurchaseEvent(finalOrderId, finalTotal);
+
                     CartManager.getInstance().clearCart();
                     String currentUserId = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : null;
                     if (currentUserId != null) {
@@ -257,12 +279,12 @@ public class CheckoutActivity extends AppCompatActivity {
 
                     NotificationHelper.showOrderSuccessNotification(
                             CheckoutActivity.this,
-                            newOrderId,
+                            finalOrderId,
                             finalTotal
                     );
 
                     Intent intent = new Intent(CheckoutActivity.this, InvoiceActivity.class);
-                    intent.putExtra("ORDER_ID", newOrderId);
+                    intent.putExtra("ORDER_ID", finalOrderId);
                     intent.putExtra("TOTAL_AMOUNT", finalTotal);
                     intent.putExtra("PAYMENT_METHOD", selectedPaymentMethod);
                     startActivity(intent);
@@ -272,9 +294,7 @@ public class CheckoutActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> {
                     btnPlaceOrder.setEnabled(true);
                     Toast.makeText(CheckoutActivity.this, "Lỗi đặt hàng: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.e(TAG, "Order placement failed: " + e.getMessage());
                 });
-    }
-    private boolean simulatePayment(String method) {
-        return true;
     }
 }

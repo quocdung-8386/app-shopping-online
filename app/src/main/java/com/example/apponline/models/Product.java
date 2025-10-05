@@ -7,24 +7,24 @@ public class Product {
     private String name;
     private double price;
     private String imageUrl;
-
     private String description;
     private double discountPrice;
     private double rating;
     private List<String> sizes;
-
     private String category_id;
     private boolean dailyDeal;
     private boolean featured;
+    private int totalSoldQuantity = 0;
+
 
     public Product() {
     }
-
     public Product(String id, String name, double price, String imageUrl,
                    String description, double discountPrice, double rating,
                    List<String> sizes,
                    String category_id,
-                   boolean dailyDeal, boolean featured) {
+                   boolean dailyDeal, boolean featured,
+                   int totalSoldQuantity) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -36,6 +36,7 @@ public class Product {
         this.category_id = category_id;
         this.dailyDeal = dailyDeal;
         this.featured = featured;
+        this.totalSoldQuantity = totalSoldQuantity;
     }
 
 
@@ -83,5 +84,12 @@ public class Product {
     }
     public void setFeatured(boolean featured) {
         this.featured = featured;
+    }
+    public int getTotalSoldQuantity() {
+        return totalSoldQuantity;
+    }
+
+    public void setTotalSoldQuantity(int totalSoldQuantity) {
+        this.totalSoldQuantity = totalSoldQuantity;
     }
 }
